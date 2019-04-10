@@ -1,5 +1,5 @@
-ru/sbrf/sandbox/sberchat/domain/JdbcSberchatService.class
-ru/sbrf/sandbox/sberchat/domain/Message.class
-ru/sbrf/sandbox/sberchat/domain/MessageDao.class
-ru/sbrf/sandbox/sberchat/domain/SberchatService.class
-ru/sbrf/sandbox/sberchat/domain/InMemorySberchatService.class
+ru\sbrf\sandbox\sberchat\domain\InMemorySberchatService.class
+ru\sbrf\sandbox\sberchat\domain\MessageDao.class
+ru\sbrf\sandbox\sberchat\domain\JdbcSberchatService.class
+ru\sbrf\sandbox\sberchat\domain\SberchatService.class
+ru\sbrf\sandbox\sberchat\domain\Message.class
