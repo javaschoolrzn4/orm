@@ -1,0 +1,167 @@
+-------------------- 0 - jdbc ---------------------
+
+* domain: add dependency
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+		
+* convert Message to entity
+	@Entity
+	@Id
+	@GeneratedValue
+	implement Serializable
+	
+* describe persistence unit in src/main/resources/META-INF/persistence.xml
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <persistence-unit name="SberchatPU">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>ru.sbrf.sandbox.sberchat.domain.Message</class>
+        <properties>
+            <!-- Configuring JDBC properties -->
+            <property name="javax.persistence.jdbc.driver"   value="org.h2.Driver" />
+            <property name="javax.persistence.jdbc.url"      value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE" />
+            <property name="javax.persistence.jdbc.user"     value="sa" />
+            <property name="javax.persistence.jdbc.password" value="" />
+
+            <!-- Hibernate properties -->
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.use_sql_comments" value="true" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create" />
+        </properties>
+    </persistence-unit>
+</persistence>
+	
+* Create service bean
+public class JpaSberchatService implements SberchatService {
+
+    private EntityManagerFactory emf;
+
+    public Collection<Message> getMessages() {
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery("SELECT m FROM Message m");
+        List result = q.getResultList();
+        return result;
+    }
+
+    public void addMessage(Message message) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(message);
+        em.getTransaction().commit();
+    }
+
+    @PostConstruct
+    public void init() {
+        emf = Persistence.createEntityManagerFactory("SberchatPU");
+    }
+}
+
+* web: add dependencies
+        <hibernate.version>5.2.10.Final</hibernate.version>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+* switch implementation in src/main/webapp/WEB-INF/sberchat-servlet.xml
+    <!--<bean class="ru.sbrf.sandbox.sberchat.domain.MessageDao" />
+    <bean class="ru.sbrf.sandbox.sberchat.domain.JdbcSberchatService" />-->
+
+    <bean class="ru.sbrf.sandbox.sberchat.domain.JpaSberchatService" />
+
+-------------------- 1 - jpa mapping ---------------------
+	
+* Spring-Data-JPA dependency
+		<spring-data-jpa.version>1.11.4.RELEASE</spring-data-jpa.version>	
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-jpa.version}</version>
+        </dependency>
+	
+* let spring provide an entityMeneger
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="SberchatPU"/>
+    </bean>
+
+	@PersistenceContext(unitName = "SberchatPU")
+	private EntityManager em;
+	
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+	
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	http://www.springframework.org/schema/tx http://springframework.org/schema/tx/spring-tx-3.0.xsd
+	
+-------------------- 2 - spring-data-jpa ---------------------
+
+* add dependencies
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>1.13.4.RELEASE</version>
+        </dependency>
+
+* repository
+@Repository
+public interface MessageRepository extends CrudRepository<Message, Integer> {
+}
+
+		
+* new implementation
+public class SberchatServiceImpl implements SberchatService {
+
+    @Autowired
+    MessageRepository messageRepository;
+
+    @Override
+    public Collection<Message> getMessages() {
+        //return StreamSupport.stream(messageRepository.findAll().spliterator(), false).collect(toList());
+        ArrayList<Message> result = new ArrayList<>();
+        messageRepository.findAll().forEach(m -> result.add(m));
+        return result;
+    }
+
+    @Override
+    public void addMessage(Message message) {
+        messageRepository.save(message);
+    }
+}
+		
+* define bean 
+    <bean class="ru.sbrf.sandbox.sberchat.domain.SberchatServiceImpl" />
+
+    <jpa:repositories base-package="ru.sbrf.sandbox.sberchat.domain" />
+	
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+
+
+-------------------- 3 - spring data repository ---------------------
+
+

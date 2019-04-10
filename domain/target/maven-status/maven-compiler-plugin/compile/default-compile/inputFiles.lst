@@ -1,0 +1,5 @@
+/work/proj/java-school/db/sberchat_0/domain/src/main/java/ru/sbrf/sandbox/sberchat/domain/InMemorySberchatService.java
+/work/proj/java-school/db/sberchat_0/domain/src/main/java/ru/sbrf/sandbox/sberchat/domain/SberchatService.java
+/work/proj/java-school/db/sberchat_0/domain/src/main/java/ru/sbrf/sandbox/sberchat/domain/MessageDao.java
+/work/proj/java-school/db/sberchat_0/domain/src/main/java/ru/sbrf/sandbox/sberchat/domain/Message.java
+/work/proj/java-school/db/sberchat_0/domain/src/main/java/ru/sbrf/sandbox/sberchat/domain/JdbcSberchatService.java
