@@ -1,10 +1,19 @@
 package ru.sbrf.sandbox.sberchat.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
+
 /**
  * Simple chat message.
  */
-public class Message {
+@Entity
 
+public class Message implements Serializable {
+
+    @Id
+    @GeneratedValue
     int id;
     String name;
     String text;
