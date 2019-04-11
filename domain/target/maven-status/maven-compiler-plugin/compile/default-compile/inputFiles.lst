@@ -1,6 +1,8 @@
 C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\SberchatService.java
+C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\SberchatServiceImpl.java
 C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\InMemorySberchatService.java
 C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\JdbcSberchatService.java
+C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\MessageRepository.java
 C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\JpaSberchatService.java
 C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\MessageDao.java
 C:\javaschool\kaptsov-sa\orm\sberchat_0\domain\src\main\java\ru\sbrf\sandbox\sberchat\domain\Message.java
